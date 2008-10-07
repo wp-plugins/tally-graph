@@ -6,8 +6,7 @@ Requires at least: 2.5.1
 Tested up to: 2.6
 Stable tag: 0.1.1
 
-Add Google charts and graphs to your WordPress site based on tallies of any
-numeric custom field over time. Visualize progress toward any goal. 
+Add Google charts and graphs to your WordPress site based on tallies of any numeric custom field over time. Visualize progress toward any goal.
 
 == Description ==
 
