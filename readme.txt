@@ -165,6 +165,16 @@ Parameters:
 
     The graph is constructed backward in time from this date. 
 
+*   *method* 
+
+    Valid values are `cumulative` or `delta`. Default is `cumulative`.
+
+    The cumulative method totals custom field values for each interval. The
+    delta method computes a running total, adding changes to the total for each
+    interval. This can be used for data like weight loss and gain, where an initial
+    entry is made with a starting weight, then gains and losses are recorded as
+    positive and negative values. 
+
 *   *no-cache* 
 
     Valid values: `true` or `false`. Default is `false`. 
