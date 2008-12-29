@@ -3,8 +3,8 @@ Contributors: cyberhobo
 Donate link: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
 Tags: graphs, charts, google, mashup, visualization, custom fields
 Requires at least: 2.5.1
-Tested up to: 2.6
-Stable tag: 0.1.1
+Tested up to: 2.7
+Stable tag: 0.2
 
 Add Google charts and graphs to your WordPress site based on tallies of any
 numeric custom field over time. Visualize progress toward any goal. 
@@ -16,10 +16,10 @@ is related to athletic training, profits, environmental footprint, weight loss,
 or any topic you care about.  Combine WordPress with the Google Chart API,
 and you get a powerful way to track and visualize your data over time. 
 
-As an example, here is one of my goals for Tally Graph:
+As a freelance web developer, I like developing open source WordPress plugins,
+but I can't always afford to work on them. So here is one my goals for Tally Graph: 
 
-*   It will generate enough donations to allow me to develop it further. Even
-$100/month would allow me to turn down a little bit of less interesting work. 
+*  You will like it enough to donate, or hire me to implement a new feature.
 
 To see Tally Graph in action visualizing progress toward this goal, 
 visit the [donation page][].
@@ -32,6 +32,7 @@ visit the [donation page][].
 
 *   Tallies data from any numeric value you enter under "Custom Field" in the WordPress post editor.
 *   Provides daily, weekly, monthly, or yearly tallies.
+*   Tally either data that accumulates, like donations, or just changes, like weight gain and loss.
 *   You can make basic use of Tally Graph without any knowlege of the Google Chart API, but you can 
 also use nearly any [Google Chart API parameters][gapi].
 
@@ -52,7 +53,7 @@ Installation should be the same as any WordPress hosted plugin:
 = Do I have to know about this Google API thing, or anything else techy? =
 
 You can get by with very little techyness, just WordPress custom fields
-and shortcodes. They're really not bad - look over the Usage section.
+and shortcodes. They're really not bad - look over the Usage section under Other Notes.
 
 If you do want to get adventurous, you can have fancier charts in more places.
 
@@ -65,7 +66,7 @@ Sure, just send email to <cyberhobo@cyberhobo.net>.
 You'll want to do two things to use Tally Graph:
 
 *   *Enter Data* - put the numbers you want to track in a WordPress custom field.
-*   *Visualize Data* - sum up your numbers over time in a Google Chart.
+*   *Visualize Data* - tally and plot your numbers over time in a Google Chart.
 
 = Enter Data =
 
