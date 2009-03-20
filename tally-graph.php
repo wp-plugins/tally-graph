@@ -28,6 +28,8 @@ details.
 define('TALLY_GRAPH_CUMULATIVE_METHOD', 'cumulative'); 
 /// Tally changes to a running total
 define('TALLY_GRAPH_DELTA_METHOD', 'delta'); 
+/// Don't tally, just track a changing number, like weight
+define('TALLY_GRAPH_TRACK_METHOD', 'track');
 	
 function tally_graph($atts) {
 	$atts = wp_parse_args($atts);
@@ -74,7 +76,7 @@ function tally_graph_url($atts) {
 	$method = TALLY_GRAPH_CUMULATIVE_METHOD;
 	if (isset($atts['method'])) {
 		$method = $atts['method'];
-		if ($method != TALLY_GRAPH_CUMULATIVE_METHOD && $method != TALLY_GRAPH_DELTA_METHOD) {
+		if (!in_array($method, array(TALLY_GRAPH_CUMULATIVE_METHOD, TALLY_GRAPH_DELTA_METHOD, TALLY_GRAPH_TRACK_METHOD))) {
 			return 'Tally Graph: Unknown method "' . $method . '"';
 		}
 		unset($atts['method']);
@@ -211,13 +213,29 @@ function tally_graph_get_counts($key, $start_time, $end_time, $interval, $method
 		}
 	}
 
-	if ($method == TALLY_GRAPH_DELTA_METHOD) {
+	if (TALLY_GRAPH_DELTA_METHOD == $method) {
 		$delta_count = tally_graph_get_count_as_of($key, $start_time);
 		for($the_time = $start_time; $the_time < $end_time; $the_time = strtotime('+1 '.$interval,$the_time)) {
 			$index = date($gnu_index_format,$the_time);
 			$delta_count += $counts[$index];
 			$counts[$index] = $delta_count;
 		}
+	} else if (TALLY_GRAPH_TRACK_METHOD == $method) {
+		$the_time = $start_time;
+		$track_value = 0;
+		$index = date($gnu_index_format, $the_time);
+		if (!$counts[$index]) { 
+			$counts[$index] = tally_graph_get_last_value($key, $start_time);
+		}
+		do {
+			if ($counts[$index]) {
+				$track_value = $counts[$index];
+			} else {
+				$counts[$index] = $track_value;
+			}
+			$the_time = strtotime('+1 '.$interval,$the_time);
+			$index = date($gnu_index_format, $the_time);
+		} while ($the_time < $end_time);
 	}
 
 	return $counts;
@@ -231,6 +249,21 @@ function tally_graph_get_count_as_of($key, $start_time) {
 		'JOIN ' . $wpdb->postmeta . ' pm ON pm.post_id = p.ID ' .
 		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
 		'AND p.post_date < \''.date('Y-m-d',$start_time).'\'';
+	return $wpdb->get_var($query_sql);
+}
+
+function tally_graph_get_last_value($key, $start_time) {
+	global $wpdb;
+
+	$query_sql = 'SELECT pm.meta_value '.
+		'FROM ' . $wpdb->posts . ' p ' .
+		'JOIN ' . $wpdb->postmeta . ' pm ON pm.post_id = p.ID ' . 
+		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
+		'AND p.post_date = (SELECT MAX(p.post_date) ' .
+		'FROM ' . $wpdb->posts . ' ip ' .
+		'JOIN ' . $wpdb->postmeta . ' ipm ON ipm.post_id = p.ID ' . 
+		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
+		'AND p.post_date < \''.date('Y-m-d',$start_time).'\')';
 	return $wpdb->get_var($query_sql);
 }
 
