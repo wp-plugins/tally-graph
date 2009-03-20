@@ -36,6 +36,8 @@ visit the [donation page][].
 *   You can make basic use of Tally Graph without any knowlege of the Google Chart API, but you can 
 also use nearly any [Google Chart API parameters][gapi].
 
+Move on to the Other Notes tab for details.
+
 [gapi]: http://code.google.com/apis/chart/
 
 == Installation ==
