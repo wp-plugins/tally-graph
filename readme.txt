@@ -3,8 +3,8 @@ Contributors: cyberhobo
 Donate link: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
 Tags: graphs, charts, google, mashup, visualization, custom fields
 Requires at least: 2.5.1
-Tested up to: 2.7
-Stable tag: 0.2
+Tested up to: 2.7.1
+Stable tag: 0.3
 
 Add Google charts and graphs to your WordPress site based on tallies of any
 numeric custom field over time. Visualize progress toward any goal. 
@@ -32,7 +32,7 @@ visit the [donation page][].
 
 *   Tallies data from any numeric value you enter under "Custom Field" in the WordPress post editor.
 *   Provides daily, weekly, monthly, or yearly tallies.
-*   Tally either data that accumulates, like donations, or just changes, like weight gain and loss.
+*   Tally either data that accumulates, like donations, or just track a number like current weight.
 *   You can make basic use of Tally Graph without any knowlege of the Google Chart API, but you can 
 also use nearly any [Google Chart API parameters][gapi].
 
@@ -40,7 +40,7 @@ also use nearly any [Google Chart API parameters][gapi].
 
 == Installation ==
 
-Installation should be the same as any WordPress hosted plugin:
+Installation should be the same as any WordPress hosted plugin from the Plugins / Add New administration interface, or:
 
 1. Click the download button and save the `tally-graph.zip` file.
 2. Expand the ZIP file to create the `tally-graph` directory.
@@ -57,7 +57,7 @@ and shortcodes. They're really not bad - look over the Usage section under Other
 
 If you do want to get adventurous, you can have fancier charts in more places.
 
-= Can I skip learning to use Tally Graph and just hire you to put charts on my site? =
+= Can I skip learning to configure Tally Graph and just hire you to put charts on my site? =
 
 Sure, just send email to <cyberhobo@cyberhobo.net>.
 
@@ -133,9 +133,9 @@ Both formats take the same parameters listed below.
 
 This tag is replaced with an image created with the Google Chart API.
 
-Shortcode: `[tally_graph ...]`
+Shortcode: `[tally_graph key="My Key"]`
 
-Template Tag: `<?php echo tally_graph(...); ?>`
+Template Tag: `<?php echo tally_graph('key=My Key'); ?>`
 
 Parameters:
 
@@ -167,13 +167,18 @@ Parameters:
 
 *   *method* 
 
-    Valid values are `cumulative` or `delta`. Default is `cumulative`.
+    Valid values are `cumulative`, `track`, or `delta`. Default is `cumulative`.
 
-    The cumulative method totals custom field values for each interval. The
-    delta method computes a running total, adding changes to the total for each
-    interval. This can be used for data like weight loss and gain, where an initial
-    entry is made with a starting weight, then gains and losses are recorded as
-    positive and negative values. 
+    The `cumulative` method totals custom field values for each interval. 
+
+    The `track` method doesn't total field values, but fills in time gaps 
+    between values. This is good for tracking numbers like current weight that you 
+    just want to track without tallying. 
+
+    The `delta` method computes a running total, adding changes to the total
+    for each interval. This can be used for data where only losses and gains are
+    entered.  One entry is necessary to establish a starting value, then gains and
+    losses are recorded as positive and negative values. 
 
 *   *no-cache* 
 
@@ -206,6 +211,6 @@ Parameters:
 If you want to create your own image tag in a template, this tag will give 
 you only the URL for the chart.
 
-Template Tag: `<?php echo tally_graph_url(...); ?>`
+Template Tag: `<?php echo tally_graph_url(); ?>`
 
 Parameters are the same as the `tally_graph` tag.
