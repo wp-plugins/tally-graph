@@ -40,6 +40,12 @@ function tally_graph($atts) {
 	return '<img class="'.$class.'" src="'.tally_graph_url($atts).'" alt="'.$atts['key'].'" />';
 }
 
+function tally_graph_week2date($year, $week, $weekday=6) {
+	$time = mktime(0, 0, 0, 1, (4 + ($week-1)*7), $year);
+	$this_weekday = date('w', $time);
+	return mktime(0, 0, 0, 1, (4 + ($week-1) * 7 + ($weekday - $this_weekday)), $year);
+}
+
 function tally_graph_url($atts) {
 	global $post;
 
@@ -87,12 +93,18 @@ function tally_graph_url($atts) {
 	list($index_gnu_format, $index_mysql_format, $first_day_suffix) = tally_graph_interval_settings($tally_interval);
 
 	// Always start on the first day of the starting interval
-	$start_time = strtotime('-'.$interval_count.' '.$tally_interval,$end_time);
-	$next_date_prefix = date($index_gnu_format,strtotime('+1 '.$tally_interval,$start_time));
-	$start_time = strtotime($next_date_prefix.$first_day_suffix);
 	// Always end on the first day after the ending interval
-	$next_date_prefix = date($index_gnu_format,strtotime('+1 '.$tally_interval,$end_time));
-	$end_time = strtotime($next_date_prefix.$first_day_suffix);
+	$start_time = strtotime('-'.$interval_count.' '.$tally_interval,$end_time);
+	if ('week' == $tally_interval) {
+		// Wouldn't need this for PHP 5.1 and later
+		$start_time = tally_graph_week2date(date('Y', $start_time), date('W', $start_time) + 1, 1);
+		$end_time = tally_graph_week2date(date('Y', $end_time), date('W', $end_time), 1);
+	} else {
+		$next_date_prefix = date($index_gnu_format,strtotime('+1 '.$tally_interval,$start_time));
+		$start_time = strtotime($next_date_prefix.$first_day_suffix);
+		$next_date_prefix = date($index_gnu_format,strtotime('+1 '.$tally_interval,$end_time));
+		$end_time = strtotime($next_date_prefix.$first_day_suffix);
+	}
 
 	// Return cached URL if available
 	if ($use_cache) {
@@ -261,7 +273,7 @@ function tally_graph_get_last_value($key, $start_time) {
 		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
 		'AND p.post_date = (SELECT MAX(p.post_date) ' .
 		'FROM ' . $wpdb->posts . ' ip ' .
-		'JOIN ' . $wpdb->postmeta . ' ipm ON ipm.post_id = p.ID ' . 
+		'JOIN ' . $wpdb->postmeta . ' ipm ON ipm.post_id = ip.ID ' . 
 		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
 		'AND p.post_date < \''.date('Y-m-d',$start_time).'\')';
 	return $wpdb->get_var($query_sql);
