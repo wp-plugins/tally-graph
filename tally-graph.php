@@ -47,7 +47,7 @@ function tally_graph_week2date($year, $week, $weekday=6) {
 }
 
 function tally_graph_url($atts) {
-	global $post;
+	global $wp_query;
 
 	$atts = wp_parse_args($atts);
 	$defaults = array('interval_count' => '6', 'chs' => '200x200', 'cht' => 'bvs');
@@ -68,8 +68,8 @@ function tally_graph_url($atts) {
 			return 'Tally Graph: couldn\'t read the to_date ' . $atts['to_date'];
 		}
 		unset($atts['to_date']);
-	} else if ($post) {
-		$end_time = strtotime($post->post_date);
+	} else if ($wp_query->post_count > 0) {
+		$end_time = strtotime($wp_query->posts[0]->post_date);
 	} else {
 		$end_time = time();
 	}
