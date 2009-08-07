@@ -112,7 +112,8 @@ function tally_graph_url($atts) {
 
 	// Return cached URL if available
 	if ($use_cache) {
-		$cache_key = 'tally-graph-'.md5($start_time.$end_time.$tally_interval.serialize($atts));
+		$key_string = implode( ',', $keys ) . $start_time . $end_time . $tally_interval . serialize($atts);
+		$cache_key = 'tally-graph-'.md5( $key_string );
 		$cached_url = wp_cache_get($cache_key);
 		if ($cached_url) {
 			return $cached_url;
