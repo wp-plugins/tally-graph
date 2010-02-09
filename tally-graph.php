@@ -2,7 +2,7 @@
 Plugin Name: Tally Graph
 Plugin URI: http://wordpress.org/extend/plugins/tally-graph/
 Description: Add Google charts and graphs to your WordPress site based on tallies of any numeric custom field over time. Visualize progress toward any goal by day, week, month, or year.
-Version: 0.3.2
+Version: 0.3.3
 Author: Dylan Kuhn
 Author URI: http://www.cyberhobo.net/
 Minimum WordPress Version Required: 2.5.1
@@ -37,7 +37,11 @@ function tally_graph($atts) {
 	if (isset($atts['class'])) {
 		$class = $atts['class'];
 	}
-	return '<img class="'.$class.'" src="'.tally_graph_url($atts).'" alt="'.$atts['key'].'" />';
+	if ( isset( $atts['cht'] ) && 'list' == $atts['cht'] ) {
+		return '<span class="' . $class . '">' . tally_graph_url( $atts ) . '</span>';
+	} else {
+		return '<img class="'.$class.'" src="'.tally_graph_url($atts).'" alt="'.$atts['key'].'" />';
+	}
 }
 
 function tally_graph_week2date($year, $week, $weekday=6) {
@@ -58,9 +62,9 @@ function tally_graph_url($atts) {
 	$keys = split(',',$atts['key']); 
 	unset($atts['key']);
 	$use_cache = true;
-	if (isset($atts['no-cache'])) {
+	if (isset($atts['no_cache'])) {
 		$use_cache = false;
-		unset($atts['no-cache']);
+		unset($atts['no_cache']);
 	}
 	if (isset($atts['to_date'])) {
 		$end_time = strtotime($atts['to_date']);
@@ -108,7 +112,8 @@ function tally_graph_url($atts) {
 
 	// Return cached URL if available
 	if ($use_cache) {
-		$cache_key = 'tally-graph-'.md5($start_time.$end_time.$tally_interval.serialize($atts));
+		$key_string = implode( ',', $keys ) . $start_time . $end_time . $tally_interval . serialize($atts);
+		$cache_key = 'tally-graph-'.md5( $key_string );
 		$cached_url = wp_cache_get($cache_key);
 		if ($cached_url) {
 			return $cached_url;
@@ -122,9 +127,9 @@ function tally_graph_url($atts) {
 	}
 
 	// Build the chart parameters
-	$chd = 't:';
 	$month_names = array('01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May',
 		'06' => 'Jun', '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec');
+	$chd = $day_label_string = $week_label_string = $month_label_string = $year_label_string = $last_month = $last_year = '';
 	$first_index = $chd_min = $chd_max = null;
 	foreach($key_counts as $index => $counts) {
 		if (is_null($first_index)) $first_index = $index;
@@ -142,7 +147,7 @@ function tally_graph_url($atts) {
 			if ($index == $first_index) {
 				$day_label_string .= '|'.substr($date_index,8,2);
 				$week_label_string .= '|'.substr($date_index,5,3);
-				$month = $month_names[substr($date_index,5,2)];
+				$month = isset( $month_names[substr($date_index,5,2)] ) ? $month_names[substr($date_index,5,2)] : '' ;
 				if ($month != $last_month) $last_month = $month;
 				else $month = ' ';
 				$month_label_string .= '|'.$month;
@@ -153,13 +158,18 @@ function tally_graph_url($atts) {
 			}
 		}
 	}
+	// Return just the list if requested
+	if ( 'list' == $atts['cht'] ) {
+		return $chd;
+	}
+
 	// Give nonzero minimum values a 10% pad
 	$pad_min = floor($chd_min - (($chd_max - $chd_min)/10));
 	$chd_min = ($pad_min>0) ? $pad_min : $chd_min;
 	
 	// Set Google chart attributes
 	// chart data
-	$atts['chd'] = $chd;
+	$atts['chd'] = 't:' . $chd;
 	if (!isset($atts['chds'])) {
 		// Provide chart scale
 		$atts['chds'] = $chd_min.','.$chd_max;
