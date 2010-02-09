@@ -2,7 +2,7 @@
 Plugin Name: Tally Graph
 Plugin URI: http://wordpress.org/extend/plugins/tally-graph/
 Description: Add Google charts and graphs to your WordPress site based on tallies of any numeric custom field over time. Visualize progress toward any goal by day, week, month, or year.
-Version: 0.3.2
+Version: 0.3.3
 Author: Dylan Kuhn
 Author URI: http://www.cyberhobo.net/
 Minimum WordPress Version Required: 2.5.1
@@ -62,9 +62,9 @@ function tally_graph_url($atts) {
 	$keys = split(',',$atts['key']); 
 	unset($atts['key']);
 	$use_cache = true;
-	if (isset($atts['no-cache'])) {
+	if (isset($atts['no_cache'])) {
 		$use_cache = false;
-		unset($atts['no-cache']);
+		unset($atts['no_cache']);
 	}
 	if (isset($atts['to_date'])) {
 		$end_time = strtotime($atts['to_date']);

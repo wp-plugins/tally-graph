@@ -182,12 +182,12 @@ Parameters:
     entered.  One entry is necessary to establish a starting value, then gains and
     losses are recorded as positive and negative values. 
 
-*   *no-cache* 
+*   *no_cache* 
 
     Valid values: `true` or `false`. Default is `false`. 
 
-    Setting to `true` forces data to be queried with every page hit, making
-    sure recent updates are included.
+    Turn off URL caching. Rarely used - only when the same graph appears more than
+    once on a page.
 
 *   *chs* 
 
