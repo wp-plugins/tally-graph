@@ -2,7 +2,7 @@
 Plugin Name: Tally Graph
 Plugin URI: http://wordpress.org/extend/plugins/tally-graph/
 Description: Add Google charts and graphs to your WordPress site based on tallies of any numeric custom field over time. Visualize progress toward any goal by day, week, month, or year.
-Version: 0.3.3
+Version: 0.4.0a
 Author: Dylan Kuhn
 Author URI: http://www.cyberhobo.net/
 Minimum WordPress Version Required: 2.5.1
@@ -83,6 +83,12 @@ function tally_graph_url($atts) {
 	} else {
 		$tally_interval = 'month';
 	}
+	if ( isset( $atts['label_interval'] ) ) {
+		$label_interval = $atts['label_interval'];
+		unset( $atts['label_interval'] );
+	} else {
+		$label_interval = $tally_interval;
+	}
 	$method = TALLY_GRAPH_CUMULATIVE_METHOD;
 	if (isset($atts['method'])) {
 		$method = $atts['method'];
@@ -112,7 +118,7 @@ function tally_graph_url($atts) {
 
 	// Return cached URL if available
 	if ($use_cache) {
-		$key_string = implode( ',', $keys ) . $start_time . $end_time . $tally_interval . serialize($atts);
+		$key_string = implode( ',', $keys ) . $start_time . $end_time . $tally_interval . $label_interval. serialize($atts);
 		$cache_key = 'tally-graph-'.md5( $key_string );
 		$cached_url = wp_cache_get($cache_key);
 		if ($cached_url) {
@@ -122,14 +128,14 @@ function tally_graph_url($atts) {
 
 	// Tally ho
 	$key_counts = array();
+	$key_labels = array();
 	foreach($keys as $index => $key) {
-		$key_counts[$index] = tally_graph_get_counts($key, $start_time, $end_time, $tally_interval, $method);
+		$key_counts[$index] = tally_graph_get_counts($key, $start_time, $end_time, $tally_interval, $method, $key_labels);
 	}
 
 	// Build the chart parameters
-	$month_names = array('01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May',
-		'06' => 'Jun', '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec');
-	$chd = $day_label_string = $week_label_string = $month_label_string = $year_label_string = $last_month = $last_year = '';
+	$chd = $day_label_string = $week_label_string = $month_label_string = $year_label_string = '';
+	$last_week = $last_month = $last_year = '';
 	$first_index = $chd_min = $chd_max = null;
 	foreach($key_counts as $index => $counts) {
 		if (is_null($first_index)) $first_index = $index;
@@ -145,13 +151,16 @@ function tally_graph_url($atts) {
 			$chd .= $comma . $count;
 			$comma = ',';
 			if ($index == $first_index) {
-				$day_label_string .= '|'.substr($date_index,8,2);
-				$week_label_string .= '|'.substr($date_index,5,3);
-				$month = isset( $month_names[substr($date_index,5,2)] ) ? $month_names[substr($date_index,5,2)] : '' ;
+				$day_label_string .= '|'.$key_labels[$date_index]['day'];
+				$week = $key_labels[$date_index]['week'];
+				if ( $week != $last_week ) $last_week = $week;
+				else $week = ' ';
+				$week_label_string .= '|'.$week;
+				$month = $key_labels[$date_index]['month'];
 				if ($month != $last_month) $last_month = $month;
 				else $month = ' ';
 				$month_label_string .= '|'.$month;
-				$year = substr($date_index,0,4);
+				$year = $key_labels[$date_index]['year'];
 				if ($year != $last_year) $last_year = $year;
 				else $year = ' ';
 				$year_label_string .= '|'.$year;
@@ -176,13 +185,13 @@ function tally_graph_url($atts) {
 	}
 	if (!isset($atts['chxt'])) {
 		// Provide labels
-		if ($tally_interval == 'year') {
+		if ($label_interval == 'year') {
 			$atts['chxt'] = 'y,x';
 			$atts['chxl'] = '1:'.$year_label_string;
-		} else if ($tally_interval == 'week') {
+		} else if ($label_interval == 'week') {
 			$atts['chxt'] = 'y,x,x';
 			$atts['chxl'] = '1:'.$week_label_string.'|2:'.$year_label_string;
-		} else if ($tally_interval == 'day') {
+		} else if ($label_interval == 'day') {
 			$atts['chxt'] = 'y,x,x,x';
 			$atts['chxl'] = '1:'.$day_label_string.'|2:'.$month_label_string.
 				'|3:'.$year_label_string;
@@ -207,13 +216,22 @@ function tally_graph_url($atts) {
 	return $chart_url;
 }
 
-function tally_graph_get_counts($key, $start_time, $end_time, $interval, $method = TALLY_GRAPH_CUMULATIVE_METHOD) {
+function tally_graph_get_counts($key, $start_time, $end_time, $interval, $method = TALLY_GRAPH_CUMULATIVE_METHOD, &$labels = null) {
 	global $wpdb;
 
 	list($gnu_index_format, $mysql_index_format) = tally_graph_interval_settings($interval);
 	$counts = array();
 	for($the_time = $start_time; $the_time < $end_time; $the_time = strtotime('+1 '.$interval,$the_time)) {
-		$counts[date($gnu_index_format,$the_time)] = 0;
+		$index = date($gnu_index_format,$the_time);
+		$counts[$index] = 0;
+		if ( is_array( $labels ) ) {
+			$labels[$index] = array(
+				'day' => date( 'j', $the_time ),
+				'week' => date( '\\WW', $the_time ),
+				'month' => date( 'M', $the_time ),
+				'year' => date( 'Y', $the_time )
+			);
+		}
 	}
 
 	$aggregator = ( TALLY_GRAPH_TRACK_METHOD == $method ) ? 'AVG' : 'SUM';
