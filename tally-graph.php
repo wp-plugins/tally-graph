@@ -185,7 +185,7 @@ function tally_graph_url($atts) {
 		} else if ($tally_interval == 'day') {
 			$atts['chxt'] = 'y,x,x,x';
 			$atts['chxl'] = '1:'.$day_label_string.'|2:'.$month_label_string.
-				'3:'.$year_label_string;
+				'|3:'.$year_label_string;
 		} else {
 			$atts['chxt'] = 'y,x,x';
 			$atts['chxl'] = '1:'.$month_label_string.'|2:'.$year_label_string;
