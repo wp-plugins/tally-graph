@@ -3,30 +3,18 @@ Contributors: cyberhobo
 Donate link: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
 Tags: graphs, charts, google, mashup, visualization, custom fields
 Requires at least: 2.5.1
-Tested up to: 2.7.1
-Stable tag: 0.3.3
+Tested up to: 3.0.1
+Stable tag: 0.4.0
 
 Add Google charts and graphs to your WordPress site based on tallies of any
 numeric custom field over time. Visualize progress toward any goal. 
 
 == Description ==
 
-The ability to see progress over time is a great motivator, whether the goal
-is related to athletic training, profits, environmental footprint, weight loss,
-or any topic you care about.  Combine WordPress with the Google Chart API,
-and you get a powerful way to track and visualize your data over time. 
-
-As a freelance web developer, I like developing open source WordPress plugins,
-but I can't always afford to work on them. So here is one my goals for Tally Graph: 
-
-*  You will like it enough to donate, or hire me to implement a new feature.
-
-To see Tally Graph in action visualizing progress toward this goal, 
-visit the [donation page][].
-
-[donation page]: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
-
-![Donation Graph](http://cyberhobo.net/wp-content/plugins/tally-graph/translate.php?key=tally_graph_donations)
+WordPress already lets you attach custom data to posts. Tally Graph lets you 
+plot that data over time using the Google Chart API. Any numeric data will 
+work, whether it is related to athletic training, profits, environmental footprint, 
+weight loss, or any topic you care about.  
 
 = Features =
 
@@ -38,7 +26,10 @@ also use nearly any [Google Chart API parameters][gapi].
 
 Move on to the Other Notes tab for details.
 
+Some features are available to you because others have [hired me][hire] to add them.
+
 [gapi]: http://code.google.com/apis/chart/
+[hire]: http://www.cyberhobo.net/hire-me/
 
 == Installation ==
 
@@ -120,6 +111,11 @@ the last post displayed.
 2. Some different kinds tally graphs in a page.
 3. Some monthly tally graphs in a sidebar.
 
+== Changelog ==
+
+= 0.4.0 =
+* New feature: the label_interval parameter
+
 == Tag Reference ==
 
 Read the Usage section first. 
@@ -148,10 +144,16 @@ Parameters:
 
 *   *tally_interval* 
 
-    Valid values: `day`, `week`, `month`, or `year`.  Default is `month`.  
+    valid values: `day`, `week`, `month`, or `year`.  default is `month`.  
 
-    This is the interval of time over which the custom field values are 
+    this is the interval of time over which the custom field values are 
     tallied.
+
+*   *label_interval* 
+
+    valid values: `day`, `week`, `month`, or `year`.  default is tally_interval.  
+
+    this is the interval of time that is labeled at the bottom of the graph
 
 *   *interval_count* 
 
