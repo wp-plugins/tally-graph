@@ -3,7 +3,7 @@ Contributors: cyberhobo
 Donate link: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
 Tags: graphs, charts, google, mashup, visualization, custom fields
 Requires at least: 2.5.1
-Tested up to: 3.0.1
+Tested up to: 3.3.1
 Stable tag: 0.4.0
 
 Add Google charts and graphs to your WordPress site based on tallies of any
@@ -23,6 +23,13 @@ weight loss, or any topic you care about.
 *   Tally either data that accumulates, like donations, or just track a number like current weight.
 *   You can make basic use of Tally Graph without any knowlege of the Google Chart API, but you can 
 also use nearly any [Google Chart API parameters][gapi].
+*   Rarely requires ugrading
+
+= Limitations =
+
+*   Easier than using the Google Chart API directly, but still far short of a point-and-click solution
+*   A post for each data point is too cumbersome for some graphs
+*   Doesn't yet use time intervals shorter than a day
 
 Move on to the Other Notes tab for details.
 
@@ -46,9 +53,23 @@ Installation should be the same as any WordPress hosted plugin from the Plugins 
 = Do I have to know about this Google API thing, or anything else techy? =
 
 You can get by with very little techyness, just WordPress custom fields
-and shortcodes. They're really not bad - look over the Usage section under Other Notes.
+and shortcodes. They're really not bad - look over the Usage section under Other Notes. 
+It's not a point-and-click interface either, but it is easier than building 
+your charts from scratch. 
 
 If you do want to get adventurous, you can have fancier charts in more places.
+
+= Are there any examples? =
+
+Check the [forum][forum], there's at least one [oldie-but-goodie][eg].
+
+[forum]: http://wordpress.org/tags/tally-graph?forum_id=10
+[eg]: http://wordpress.org/support/topic/plugin-tally-graph-example-implementation-fishing-stats?replies=1
+
+= Where are the custom fields? =
+
+As of WordPress 3.3 you must check a box in the "Screen Options" area in the upper right of the post editor page
+to make the custom field interface appear.
 
 = Can I skip learning to configure Tally Graph and just hire you to put charts on my site? =
 
