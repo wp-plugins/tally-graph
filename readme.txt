@@ -33,7 +33,7 @@ also use nearly any [Google Chart API parameters][gapi].
 
 Move on to the Other Notes tab for details.
 
-[gapi]: http://code.google.com/apis/chart/
+[gapi]: https://developers.google.com/chart/image/docs/chart_params
 [hire]: http://www.cyberhobo.net/hire-me/
 
 == Installation ==
