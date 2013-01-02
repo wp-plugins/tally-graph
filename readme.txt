@@ -3,8 +3,8 @@ Contributors: cyberhobo
 Donate link: http://www.cyberhobo.net/downloads/wordpress-tally-graph-plugin/
 Tags: graphs, charts, google, mashup, visualization, custom fields
 Requires at least: 2.5.1
-Tested up to: 3.3.1
-Stable tag: 0.4.1
+Tested up to: 3.5
+Stable tag: 0.4.2
 
 Add Google charts and graphs to your WordPress site based on tallies of any
 numeric custom field over time. Visualize progress toward any goal. 
@@ -32,8 +32,6 @@ also use nearly any [Google Chart API parameters][gapi].
 *   Doesn't yet use time intervals shorter than a day
 
 Move on to the Other Notes tab for details.
-
-Some features are available to you because others have [hired me][hire] to add them.
 
 [gapi]: http://code.google.com/apis/chart/
 [hire]: http://www.cyberhobo.net/hire-me/
