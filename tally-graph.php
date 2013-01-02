@@ -240,7 +240,7 @@ function tally_graph_get_counts($key, $start_time, $end_time, $interval, $method
 		$aggregator . '(pm.meta_value) AS ydata '.
 		'FROM '. $wpdb->posts .' p '. 
 		'JOIN '. $wpdb->postmeta .' pm ON pm.post_id = p.ID '.
-		'WHERE pm.meta_key = \''. $wpdb->prepare($key) .'\' '.
+		'WHERE pm.meta_key = \''. esc_sql($key) .'\' '.
 		'AND p.post_date >= \''.date('Y-m-d',$start_time).'\' '.
 		'AND p.post_date < \''.date('Y-m-d',$end_time).'\' '.
 		'GROUP BY DATE_FORMAT(p.post_date,\''.$mysql_index_format.'\') '.
@@ -289,7 +289,7 @@ function tally_graph_get_count_as_of($key, $start_time) {
 	$query_sql = 'SELECT SUM(pm.meta_value) AS count '.
 		'FROM ' . $wpdb->posts . ' p ' .
 		'JOIN ' . $wpdb->postmeta . ' pm ON pm.post_id = p.ID ' .
-		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
+		'WHERE pm.meta_key = \'' . esc_sql($key) . '\' ' .
 		'AND p.post_date < \''.date('Y-m-d',$start_time).'\'';
 	return $wpdb->get_var($query_sql);
 }
@@ -300,11 +300,11 @@ function tally_graph_get_last_value($key, $start_time) {
 	$query_sql = 'SELECT pm.meta_value '.
 		'FROM ' . $wpdb->posts . ' p ' .
 		'JOIN ' . $wpdb->postmeta . ' pm ON pm.post_id = p.ID ' . 
-		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
+		'WHERE pm.meta_key = \'' . esc_sql($key) . '\' ' .
 		'AND p.post_date = (SELECT MAX(p.post_date) ' .
 		'FROM ' . $wpdb->posts . ' ip ' .
 		'JOIN ' . $wpdb->postmeta . ' ipm ON ipm.post_id = ip.ID ' . 
-		'WHERE pm.meta_key = \'' . $wpdb->prepare($key) . '\' ' .
+		'WHERE pm.meta_key = \'' . esc_sql($key) . '\' ' .
 		'AND p.post_date < \''.date('Y-m-d',$start_time).'\')';
 	return $wpdb->get_var($query_sql);
 }
