@@ -227,8 +227,6 @@ Parameters:
     can go nuts with all the options. You'll probably use at least `chtt`, 
     the chart title.
 
-[gapi]: http://code.google.com/apis/chart/
-
 = tally_graph_url =
 
 If you want to create your own image tag in a template, this tag will give 
