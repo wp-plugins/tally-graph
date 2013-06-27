@@ -11,7 +11,7 @@ numeric custom field over time. Visualize progress toward any goal.
 
 == Description ==
 
-WordPress already lets you attach custom data to posts. Tally Graph lets you 
+WordPress already lets you attach time-based custom data to posts. Tally Graph lets you 
 plot that data over time using the Google Chart API. Any numeric data will 
 work, whether it is related to athletic training, profits, environmental footprint, 
 weight loss, or any topic you care about.  
@@ -27,9 +27,11 @@ also use nearly any [Google Chart API parameters][gapi].
 
 = Limitations =
 
-*   Easier than using the Google Chart API directly, but still far short of a point-and-click solution
-*   A post for each data point is too cumbersome for some graphs
-*   Doesn't yet use time intervals shorter than a day
+Tally Graph is easier to use than direct Google Chart API calls, but may not be what you need if:
+
+*   You're looking for a point-and-click full graphical user interface 
+*   A post for each data point is too cumbersome for your graphs
+*   You need to graph time intervals shorter than a day
 
 Move on to the Other Notes tab for details.
 
@@ -38,13 +40,7 @@ Move on to the Other Notes tab for details.
 
 == Installation ==
 
-Installation should be the same as any WordPress hosted plugin from the Plugins / Add New administration interface, or:
-
-1. Click the download button and save the `tally-graph.zip` file.
-2. Expand the ZIP file to create the `tally-graph` directory.
-3. Upload the `tally-graph` directory and all the files in it to the 
-`wp-content/plugins` directory on your server.
-4. Activate the plugin in the "Plugins" administration tab of WordPress.
+Install using any [standard plugin installation method][http://codex.wordpress.org/Managing_Plugins#Installing_Plugins].
 
 == Frequently Asked Questions ==
 
